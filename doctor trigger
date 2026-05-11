@@ -1,0 +1,21 @@
+trigger DoctorAvailabilityTrigger on Appointment__c (before insert, before update) {
+
+    for(Appointment__c newApp : Trigger.new) {
+
+        List<Appointment__c> existingAppointments = [
+
+            SELECT Id
+            FROM Appointment__c
+            WHERE Doctor__c = :newApp.Doctor__c
+            AND date__c = :newApp.date__c
+            AND Id != :newApp.Id
+        ];
+
+        if(!existingAppointments.isEmpty()) {
+
+            newApp.addError(
+                'Doctor already has appointment on this date'
+            );
+        }
+    }
+}
