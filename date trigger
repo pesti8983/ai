@@ -1,0 +1,17 @@
+trigger AppointmentTrigger on Appointment__c (before insert, before update) {
+
+    for(Appointment__c app : Trigger.new) {
+
+        if(app.date__c == Date.today()) {
+            app.Status__c = 'Active';
+        }
+
+        else if(app.date__c < Date.today()) {
+            app.Status__c = 'Completed';
+        }
+
+        else {
+            app.Status__c = 'Pending';
+        }
+    }
+}
